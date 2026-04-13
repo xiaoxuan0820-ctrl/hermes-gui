@@ -3,8 +3,6 @@ name: Build Hermes GUI
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
   workflow_dispatch:
 
 jobs:
@@ -12,82 +10,28 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '18'
           cache: 'npm'
-      
-      - name: Install dependencies
-        run: npm ci
-      
-      - name: Build macOS app
-        run: npm run build:mac
-      
-      - name: Upload macOS artifacts
-        uses: actions/upload-artifact@v4
+      - run: npm install
+      - run: npm run build:mac
+      - uses: actions/upload-artifact@v4
         with:
-          name: macos-build
-          path: |
-            dist/*.dmg
-            dist/*.zip
+          name: macos-dmg
+          path: dist/*.dmg
 
   build-windows:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '18'
           cache: 'npm'
-      
-      - name: Install dependencies
-        run: npm ci
-      
-      - name: Build Windows app
-        run: npm run build:win
-      
-      - name: Upload Windows artifacts
-        uses: actions/upload-artifact@v4
+      - run: npm install
+      - run: npm run build:win
+      - uses: actions/upload-artifact@v4
         with:
-          name: windows-build
-          path: |
-            dist/*.exe
-            dist/*.zip
-
-  release:
-    needs: [build-mac, build-windows]
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    steps:
-      - name: Download macOS artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: macos-build
-          path: dist/
-      
-      - name: Download Windows artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: windows-build
-          path: dist/
-      
-      - name: Create Release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: v1.0.0
-          name: Hermes GUI v1.0.0
-          body: |
-            ## 🦌 Hermes GUI v1.0.0
-            
-            Hermes Agent 的桌面客户端
-            
-            ### 下载
-            - **macOS**: `Hermes GUI-1.0.0.dmg`
-            - **Windows**: `Hermes GUI Setup 1.0.0.exe`
-          files: dist/*
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          name: windows-exe
+          path: dist/*.exe

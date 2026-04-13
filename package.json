@@ -18,25 +18,13 @@
   "build": {
     "appId": "com.hermes.gui",
     "productName": "Hermes GUI",
-    "directories": {
-      "output": "dist"
-    },
+    "directories": { "output": "dist" },
     "mac": {
       "category": "public.app-category.productivity",
-      "target": [
-        {
-          "target": "dmg",
-          "arch": ["x64"]
-        }
-      ]
+      "target": [{ "target": "dmg", "arch": ["x64"] }]
     },
     "win": {
-      "target": [
-        {
-          "target": "nsis",
-          "arch": ["x64"]
-        }
-      ]
+      "target": [{ "target": "nsis", "arch": ["x64"] }]
     }
   }
 }
