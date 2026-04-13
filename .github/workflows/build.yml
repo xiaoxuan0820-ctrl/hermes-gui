@@ -13,14 +13,24 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '18'
-      - run: npm install
-      - run: npm run build:mac
+      - name: Install dependencies
+        run: npm install
+      - name: Build macOS (x64)
+        run: npm run build:mac-x64
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/upload-artifact@v4
         with:
-          name: macos-dmg
-          path: dist/*.dmg
+          name: macos-dmg-x64
+          path: dist/*x64*.dmg
+      - name: Build macOS (arm64)
+        run: npm run build:mac-arm
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: macos-dmg-arm64
+          path: dist/*arm64*.dmg
 
   build-windows:
     runs-on: windows-latest
